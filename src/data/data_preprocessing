@@ -1,0 +1,23 @@
+import pandas as pd
+
+def add_x_coord(df:pd.DataFrame, X:float)->pd.DataFrame:
+    """
+    This function adds a column of x coordinates to the dataframe in the first column
+
+    Parameters:
+    df (pd.Dataframe): The dataframe to which the x coordinates will be added
+    x (float): The x coordinate to be added to the dataframe
+
+    Returns:
+    pd.Dataframe: The dataframe with the x coordinates added
+    """
+    df.insert(0, 'X', X)
+    return df
+
+if __name__ == "__main__":
+    dir_fusion = 'fusion360'
+    df = pd.read_csv(f'{dir_fusion}/point_extraction_plane_output.csv')
+    X = 4375.87
+    df = add_x_coord(df, X)
+    df.to_csv(f'{dir_fusion}/point_extraction_plane_output_1.csv', index=False)
+    print("Done!")

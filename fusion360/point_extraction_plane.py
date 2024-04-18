@@ -27,7 +27,8 @@ def run(context):
 
         # Open the file for writing
         with open(filepath, 'w') as file:
-            file.write('type, local_X, local_Y, local_Z, phi_rad, phi_deg, radial_distance\n')  # Write the header row
+            # Write the header row
+            file.write('type, local_X, local_Y, local_Z, phi_rad, phi_deg, radial_distance\n')  
             
             # initialise the polar angle
             delta_phi = 2*math.pi / len(selections)

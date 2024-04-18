@@ -1,4 +1,4 @@
-fusion360/.vscode/launch.json
 src/data/baseline_draft_tube/*
 freeCAD/data/*
 freeCAD/notebooks/*
+**/launch.json

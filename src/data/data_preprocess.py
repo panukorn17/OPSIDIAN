@@ -47,6 +47,29 @@ def get_spline_details(dir:str)->pd.DataFrame:
 
     return df_spline
 
+def get_cartesian_coords(polar_coords:pd.DataFrame, theta:float)->pd.DataFrame:
+    """
+    This function converts the local polar coordinates to cartesian coordinates.
+
+    Parameters:
+    polar_coords (pd.DataFrame): Dataframe containing the polar coordinates.
+    theta (float): Angle of the spline at the plane in radians.
+
+    Returns:
+    df_cartesian (pd.DataFrame): Dataframe containing the cartesian coordinates.
+    """
+    # Calculate the cartesian coordinates
+    df_cartesian = pd.DataFrame()
+    df_cartesian['X_global'] = polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.cos(theta)
+    df_cartesian['Y_global'] = polar_coords['radial_distance'] * np.sin(polar_coords['phi_rad'])
+    df_cartesian['Z_global'] = polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.sin(theta)
+
+    # Save the data
+    df_cartesian.to_csv(f'src/data/baseline_draft_tube/plane_{plane}/cartesian_coordinates.csv', index=False)
+
+    return df_cartesian
+
+
 if __name__ == "__main__":
     # Input plane
     plane = 2
@@ -57,8 +80,6 @@ if __name__ == "__main__":
     # Load spline details data
     df_spline = get_spline_details('src/data/baseline_draft_tube/spline')
 
-    # Drop missing values
-    df = df.dropna()
-
-    # Save data
-    df.to_csv("data/processed_data.csv", index=False)
+    # Calculate the global cartesian coordinates of the plane
+    theta = df_spline[df_spline['plane'] == plane]['angle_rad'].values[0]
+    df_cartesian = get_cartesian_coords(df_polar, theta)

@@ -20,7 +20,7 @@ def run(context):
         selections = ui.activeSelections
 
         # Path to save the CSV file
-        filepath = f'{DIR}/draft_tube_{user_input}/points_plane_{user_input}_XYZ.csv'
+        filepath = f'{DIR}/plane_{user_input}/polar_coordinates.csv'
 
         # Ensure the directory exists
         os.makedirs(os.path.dirname(filepath), exist_ok=True)

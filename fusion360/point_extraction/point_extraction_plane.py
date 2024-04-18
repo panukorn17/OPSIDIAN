@@ -30,8 +30,8 @@ def run(context):
             # Write the header row
             file.write('type, local_X, local_Y, local_Z, phi_rad, phi_deg, radial_distance\n')  
             
-            # initialise the polar angle
-            delta_phi = 2*math.pi / len(selections)
+            # initialise the polar angle taking into account the centre point
+            delta_phi = 2*math.pi / (len(selections) - 1)
             phi = -delta_phi
 
             # Iterate over each selected entity

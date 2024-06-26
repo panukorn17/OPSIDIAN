@@ -47,11 +47,12 @@ def get_spline_details(dir:str)->pd.DataFrame:
 
     return df_spline
 
-def get_cartesian_coords(polar_coords:pd.DataFrame, theta:float)->pd.DataFrame:
+def get_cartesian_coords(centre_coords: tuple, polar_coords:pd.DataFrame, theta:float)->pd.DataFrame:
     """
     This function converts the local polar coordinates to cartesian coordinates.
 
     Parameters:
+    centre_coords (tuple): Tuple containing the x, y, z coordinates of the centre of the plane.
     polar_coords (pd.DataFrame): Dataframe containing the polar coordinates.
     theta (float): Angle of the spline at the plane in radians.
 
@@ -60,9 +61,9 @@ def get_cartesian_coords(polar_coords:pd.DataFrame, theta:float)->pd.DataFrame:
     """
     # Calculate the cartesian coordinates
     df_cartesian = pd.DataFrame()
-    df_cartesian['X_global'] = polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.cos(theta)
-    df_cartesian['Y_global'] = polar_coords['radial_distance'] * np.sin(polar_coords['phi_rad'])
-    df_cartesian['Z_global'] = polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.sin(theta)
+    df_cartesian['X_global'] = centre_coords[0] + polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.cos(theta)
+    df_cartesian['Y_global'] = centre_coords[1] + polar_coords['radial_distance'] * np.sin(polar_coords['phi_rad'])
+    df_cartesian['Z_global'] = centre_coords[2] + polar_coords['radial_distance'] * np.cos(polar_coords['phi_rad']) * np.sin(theta)
 
     # Save the data
     df_cartesian.to_csv(f'src/data/baseline_draft_tube/plane_{plane}/cartesian_coordinates.csv', index=False)

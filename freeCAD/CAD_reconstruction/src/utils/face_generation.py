@@ -95,13 +95,16 @@ def add_spine():
 
     return obj
 
-def sweep(face_shapes: List, spine: Part.Shape):
+def sweep(face_shapes: List, spine: Part.Shape)->Part.Shape:
     """
     This function performs a sweep operation in freeCAD.
     
     Parameters:
     face_shapes (list of shapes): List containing the shapes of the faces.
     spine (shape): Shape of the spine.
+
+    Returns:
+    sweep (shape): Shape of the sweep.
     """
     # create sweep object
     sweep = App.ActiveDocument.addObject('Part::Sweep', 'Sweep')
@@ -112,3 +115,5 @@ def sweep(face_shapes: List, spine: Part.Shape):
 
     # recompute the document
     App.ActiveDocument.recompute()
+
+    return sweep

@@ -135,8 +135,11 @@ def generate_faces(faces_coordinate: List[Tuple]):
 
     Parameters:
     faces_coordinate (list of tuple): List containing the coordinates of the faces of the tube.
-    """
 
+    Returns:
+    face_shapes (list of shapes): List containing the shapes of the faces.
+    """
+    face_shapes = []
     for face_coords in faces_coordinate:
         # create freeCAD points
         vec_points = [App.Vector(p[0], p[1], p[2]) for p in face_coords[1:]]
@@ -152,6 +155,8 @@ def generate_faces(faces_coordinate: List[Tuple]):
 
         # recompute the document
         App.ActiveDocument.recompute()
+        face_shapes.append(obj)
+    return face_shapes
 
 def add_spine():
     """
@@ -159,6 +164,9 @@ def add_spine():
 
     Parameters:
     spine_coordinates (list of tuple): List containing the coordinates of the spine.
+
+    Returns:
+    Spine (shape): Shape of the spine.
     """
     # create freeCAD points
     spine_points = [App.Vector(coord[0], coord[1], coord[2]) for coord in centres]
@@ -174,9 +182,30 @@ def add_spine():
     # recompute the document
     App.ActiveDocument.recompute()
 
+    return obj
+
+def sweep(face_shapes: List, spine: Part.Shape):
+    """
+    This function performs a sweep operation in freeCAD.
+    
+    Parameters:
+    face_shapes (list of shapes): List containing the shapes of the faces.
+    spine (shape): Shape of the spine.
+    """
+    # create sweep object
+    sweep = App.ActiveDocument.addObject('Part::Sweep', 'Sweep')
+    sweep.Sections = face_shapes
+    sweep.Spine = (spine,['Edge1',])
+    sweep.Solid = False
+    sweep.Frenet = False
+
+    # recompute the document
+    App.ActiveDocument.recompute()
+
 if __name__ == "__main__":
-    baseline_factor = [1, 1]
+    baseline_factor = [0.8, 0.3]
     faces_coordinate = calculate_face_coords(baseline_factor)
-    generate_faces(faces_coordinate)
-    add_spine()
+    face_shapes = generate_faces(faces_coordinate)
+    spine = add_spine()
+    sweep(face_shapes, spine)
     #exec(open('C:/Users/ASUS/UCL/Research Assistant/code/OPSIDIAN/freeCAD/CAD_reconstruction/src/utils/face_generation.py').read())

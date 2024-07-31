@@ -33,4 +33,23 @@ To get started, follow these steps:
 DIR = 'path to the directory containing the OPSIDIAN folder'  
 exec(open(f'{DIR}/src/main.py').read())  
 ```
+## Some Engineering
+As detailed by Sheikh et al. (2022), kinetic or potential energy not converted to mechanical energy of the turbine shaft is wasted. To minimise energy loss (maximise conversion of KE and PE to ME), the draft tube needs to be optimised to maximise the _dimensionless mean pressure recovery coefficient_:
+$$C_{prm} \equiv \frac{P_2 - P_1}{\frac{1}{2} \rho v_1^2}$$
+By maximising this coefficient, the theoretically available power, $\dot{W}$ is also maximised, where:
+$$\dot{W} = A_0 v_0 (\Delta P)$$
+$$\Delta P \equiv P_0 - P_1$$
+and therefore we can make substitutions and the power becomes a function of the mean pressure recovery coefficient:
+$$\dot{W} = A_0 v_0 \left(P_0 - P_2 + C_{prm}\left(\frac{\rho v_1^2}{2}\right)\right)$$
+The parameters are as follows:
+- $A_0$: cross-sectional area of the flow upstream of the turbine blade (**FIXED**)
+- $v_0$: characteristic velocities upstream of the turbine (**FIXED**)
+- $v_1$: characteristic velocities downstream of the turbine (**FIXED**)
+- $P_0$: average fluid pressure upstream of the turbine (**FIXED**)
+- $P_1$: average fluid pressure downstream of the turbine (**NUMERICAL SIMULATION**)
+- $P_2$: average fluid pressure at the end of the draft tube (**FIXED**)
+- $\rho$: density of the fluid (water)
 
+
+# References
+Sheikh, Haris Moazam, Tess A. Callan, Kealan J. Hennessy, and Philip S. Marcus. “Optimization of the Shape of a Hydrokinetic Turbine’s Draft Tube and Hub Assembly Using Design-by-Morphing with Bayesian Optimization.” Computer Methods in Applied Mechanics and Engineering 401 (November 2022): 115654. https://doi.org/10.1016/j.cma.2022.115654.

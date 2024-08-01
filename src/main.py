@@ -29,7 +29,7 @@ DATA_DIR = SRC_DIR / 'data'
 
 if __name__ == "__main__":
     clear_doc()
-    baseline_factor = [1, 1]
+    baseline_factor = [1, 0]
     base_element_size = 20 #mm
     faces_coordinate = calculate_face_coords(baseline_factor, DATA_DIR)
     face_shapes = generate_faces(faces_coordinate)

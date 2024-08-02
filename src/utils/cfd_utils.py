@@ -1,5 +1,7 @@
 import Part 
 import FreeCAD
+import FreeCAD as App
+
 from CfdOF import CfdAnalysis
 from CfdOF import CfdTools
 from CfdOF.Solve import CfdPhysicsSelection, CfdFluidMaterial, CfdInitialiseFlowField, CfdSolverFoam
@@ -27,17 +29,18 @@ def setup_physics_model(model, time='Steady', turbulence='Laminar', turbulenceMo
     model.Turbulence = turbulence 
     model.TurbulenceModel = turbulenceModel
 
-def setup_fluid_properties(model_fluid_properties, name='Water', type='Isothermal', density='998 kg/m^3', dynamicViscosity='1.003e-3 kg/m/s'):
+def setup_fluid_properties(name='Water', type='Isothermal', density='998 kg/m^3', dynamicViscosity='1.003e-3 kg/m/s'):
     """
     Function to set up the fluid properties for CfdOF
     """
+    print("Setting up fluid proberties")
     if name == 'Water':
         desc = 'Standard distilled water properties at 20 Degrees Celsius and 1 atm'
-        model_fluid_properties.Label = 'Water'
+        App.ActiveDocument.FluidProperties.Label = 'Water'
     else:
         desc = ''
-        model_fluid_properties.Label = 'Fluid'
-    model_fluid_properties.Material = {'CardName': name + type,
+        App.ActiveDocument.FluidProperties.Label = 'Fluid'
+    App.ActiveDocument.FluidProperties.Material = {'CardName': name + type,
                                        'AuthorAndLicence': '',
                                        'Name': name,
                                        'Type': type,

@@ -11,30 +11,35 @@
 #----------------------------------------------------------------------------------------------------------------
 ################################################################################################################
 
-import sys
-# append the path to the sys.path
-sys.path.append(DIR + '/src')
-
-import FreeCAD
-import os
-
 from pathlib import Path
-from utils.face_generation import calculate_face_coords, generate_faces, add_spine, sweep
-from utils.cfd_utils import create_analysis_container , setup_fluid_properties
-from utils.cad_utils import clear_doc
-from utils.mesh_utils import mesh
+import gmsh
+from utils.face_generation import calculate_face_coords, generate_faces_gmsh
+# from utils.face_generation import , add_spine, sweep
+# from utils.cfd_utils import create_analysis_container , setup_fluid_properties
+# from utils.mesh_utils import mesh
 
-SRC_DIR = Path(DIR + '/src')
-DATA_DIR = SRC_DIR / 'data'
+DATA_DIR = Path('src')/ 'data'
 
 if __name__ == "__main__":
-    clear_doc()
     baseline_factor = [0.75, 0.25]
     base_element_size = 20 #mm
+    gmsh.initialize()
+    gmsh.model.add("faces")
     faces_coordinate = calculate_face_coords(baseline_factor, DATA_DIR)
-    face_shapes = generate_faces(faces_coordinate)
-    spine = add_spine()
-    sweep = sweep(face_shapes, spine)
-    create_analysis_container()
-    setup_fluid_properties()
-    mesh(sweep, base_element_size)
+    face_wires = generate_faces_gmsh(faces_coordinate)
+    solid = gmsh.model.occ.addThruSections(face_wires, makeSolid=True)
+    gmsh.model.occ.synchronize()
+    print("out:", solid, "volumes:", gmsh.model.getEntities(3))
+    gmsh.write("src/runs/gmsh/preview.brep")
+    # optional: global mesh size
+    gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 5.0)
+    gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 20.0)
+
+    gmsh.model.mesh.generate(3)
+    gmsh.write("src/runs/gmsh/preview.msh")
+    gmsh.finalize()
+    # spine = add_spine()
+    # sweep = sweep(face_shapes, spine)
+    # create_analysis_container()
+    # setup_fluid_properties()
+    # mesh(sweep, base_element_size)

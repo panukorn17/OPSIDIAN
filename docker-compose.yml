@@ -1,0 +1,53 @@
+services:
+  opsidian:
+    build: .
+    image: opsidian:latest
+    container_name: opsidian
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  opsidian-debug:
+    build: .
+    working_dir: /app
+    image: opsidian:latest
+    container_name: opsidian-debug
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    ports:
+      - "5678:5678"
+    command:
+      [
+        "python",
+        "-m",
+        "debugpy",
+        "--listen",
+        "0.0.0.0:5678",
+        "--wait-for-client",
+        "/app/src/main.py"
+      ]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    profiles:
+      - debug

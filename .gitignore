@@ -4,4 +4,4 @@ freeCAD/notebooks/*
 **/launch.json
 .env
 *.pyc
-src/runs/*
+runs/*
